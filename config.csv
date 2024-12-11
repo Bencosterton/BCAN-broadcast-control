@@ -1,10 +1,3 @@
 tabName,address
-Multi Router, http://127.0.0.1:5010/ip3
-Foldback - IEMs,http://10.9.59.21:5004
-Bolero Config,http://10.9.59.21:5009
-Muli-view, http://10.9.32.79:5020/multiview
-Studio Control, http://10.9.59.22:5099/pcr1control
-Studio Status, http://10.9.59.22:5099/studio1
-KiPro Control, http://127.0.0.1:5080/kipro
-Multiview UMD, http://127.0.0.1:5001
+BCAN, https://github.com/Bencosterton/BCAN-broadcast-control
 GitHub, https://www.github.com/Bencosterton
