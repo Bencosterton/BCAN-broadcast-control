@@ -16,3 +16,20 @@ Imagine IP3 video router control - https://github.com/Bencosterton/Imagine_IP3_C
 Lawo MC2 router control - https://github.com/Bencosterton/Lawo_Emberplus<br>
 TSL-UMD management - https://github.com/Bencosterton/TSL-UMDv5_scripts<br>
 ... As well as other tools to be released soon.</p>
+
+
+## If you want to try the app out;
+Download the repo and in the root directory of the app run;
+```bash
+npm install
+```
+```bash
+npm start
+```
+
+## Notes
+
+<p>The beauty of BCAN Broadcast Control is the simplicity. So out the box, the client won't do much, if anything.<br>
+You will need to use the 'config' tab to add you own web interfaces.<br>
+If you're lucky enought to have an Imagine IP3 on site, we have an interface for you already, see above<br>
+For anthing else, build it! Or get in touch.</p>
