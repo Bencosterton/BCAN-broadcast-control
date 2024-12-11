@@ -2,8 +2,7 @@
 
 BCAN Broadcast Control is a collection of resources used to control all aspects of a modern broadcast enviroment.
 
-![BCAN_Client_Demo](https://github.com/user-attachments/assets/45cbab31-ff9e-4faa-ab08-7fd0f040b1bc)
-
+![BCAN_Client_Demo](https://github.com/user-attachments/assets/70011157-94f8-447b-87b3-f8fd0e882361)
 
 The ethos behind BCAN is to use open source control protocols to control your broadcast equiment, deleivered in a way that is also open source and easily configured without the need for proprietary coding languages or GIU interfaces.
 
