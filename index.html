@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BCAN Broadcast Control</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        
+        .tab-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .tab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e0e0e0;
+            padding: 5px 15px 0 5px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 2px;
+            flex-grow: 1;
+        }
+        
+        .app-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 5px;
+        }
+
+        .app-info img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .app-info span {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            background-color: #d4d4d4;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .tab.active {
+            background-color: #ffffff;
+        }
+        
+        .tab:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .tab-content {
+            flex-grow: 1;
+            display: none;
+            background: white;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        webview {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        #config-container {
+            padding: 20px;
+            height: calc(100% - 40px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #config-editor {
+            width: 100%;
+            height: calc(100% - 100px);
+            font-family: monospace;
+            white-space: pre;
+            resize: none;
+        }
+
+        .config-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        #status-message {
+            color: #666;
+            font-style: italic;
+        }
+        .multiline {
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: small;
+        }
+    </style>
+</head>
+<body>
+    <div class="tab-container" id="tabContainer">
+        <div class="tab-header">
+            <div class="tabs" id="tabList">
+                <div class="tab" onclick="openTab(event, 'config-tab')">⚙️ Config</div>
+            </div>
+            <div class="app-info">
+                <img src="BCAN.ico" alt="BCAN Logo">
+                <span>BCAN Broadcast Control</span>
+            </div>
+        </div>
+        <div id="config-tab" class="tab-content">
+            <div id="config-container">
+                <h2>BCAN Configuration</h2>
+                <div class="multiline">
+v.0.1 Winter 2024
+Benjamin Costerton
+github.com/bencosterton
+                </div>
+                <p>Add control pages here. Format: tabName,address</p>
+                <textarea id="config-editor"></textarea>
+                <div class="config-buttons">
+                    <button class="config-button" onclick="saveConfig()">Save Changes</button>
+                    <button class="config-button reload" onclick="reloadApp()">Reload App</button>
+                </div>
+                <div id="status-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+        
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        loadConfig();
+
+        function loadConfig() {
+            ipcRenderer.send('get-config');
+        }
+
+        ipcRenderer.on('get-config-reply', (event, data) => {
+            if (data.success) {
+                document.getElementById('config-editor').value = data.content;
+                loadTabs(data.content);
+            } else {
+                showStatus('Error loading configuration: ' + data.error, true);
+            }
+        });
+
+        // Tab functionality
+        function loadTabs(csvContent) {
+            const lines = csvContent.trim().split('\n');
+            const headers = lines[0].split(',');
+            const tabs = lines.slice(1).map(line => {
+                const [tabName, address] = line.split(',').map(val => val.trim());
+                return { tabName, address };
+            });
+
+            const tabList = document.getElementById('tabList');
+            const configTab = tabList.lastElementChild;
+            tabList.innerHTML = '';
+            tabList.appendChild(configTab);
+
+            const tabContainer = document.getElementById('tabContainer');
+            const configContent = document.getElementById('config-tab');
+            [...tabContainer.children].forEach(child => {
+                if (child.id !== 'config-tab' && !child.classList.contains('tab-header')) {
+                    tabContainer.removeChild(child);
+                }
+            });
+
+            tabs.forEach((tab, index) => {
+                if (tab.tabName && tab.address) {
+                    // Add tab
+                    const tabButton = document.createElement('div');
+                    tabButton.className = 'tab';
+                    tabButton.textContent = tab.tabName;
+                    tabButton.onclick = (e) => openTab(e, `tab${index}`);
+                    tabList.insertBefore(tabButton, configTab);
+
+                    const tabContent = document.createElement('div');
+                    tabContent.id = `tab${index}`;
+                    tabContent.className = 'tab-content';
+                    
+                    const webview = document.createElement('webview');
+                    webview.setAttribute('src', tab.address);
+                    webview.setAttribute('nodeintegration', 'true');
+                    webview.setAttribute('webpreferences', 'contextIsolation=false');
+                    
+                    webview.addEventListener('dom-ready', () => {
+                        webview.executeJavaScript(`
+                            document.addEventListener('contextmenu', (e) => {
+                                e.preventDefault();
+                            });
+                        `);
+                    });
+                    
+                    tabContent.appendChild(webview);
+                    tabContainer.appendChild(tabContent);
+                }
+            });
+
+            if (tabs.length > 0) {
+                const firstTab = document.querySelector('.tab');
+                firstTab.click();
+            }
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function saveConfig() {
+            const content = document.getElementById('config-editor').value;
+            ipcRenderer.send('save-config', content);
+        }
+
+        ipcRenderer.on('save-config-reply', (event, data) => {
+            if (data.success) {
+                showStatus('Configuration saved successfully! Click "Reload App" to apply changes.');
+            } else {
+                showStatus('Error saving configuration: ' + data.error, true);
+            }
+        });
+
+        function reloadApp() {
+            window.location.reload();
+        }
+
+        function showStatus(message, isError = false) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.style.color = isError ? '#dc3545' : '#28a745';
+        }
+    </script>
+</body>
+</html>

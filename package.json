@@ -1,0 +1,42 @@
+{
+    "name": "bcan",
+    "version": "0.1.0",
+    "description": "Tab viewer with webviews",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "electron-builder --win --config.win.signAndEditExecutable=false"
+    },
+    "author": "Benjamin Costerton",
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Bencosterton/BCAN-broadcast-control"
+    },
+    "devDependencies": {
+        "electron": "^28.1.0",
+        "electron-builder": "^25.1.8"
+    },
+    "dependencies": {
+        "csv-parse": "^5.5.3",
+        "csv-parser": "^3.0.0",
+        "csv-stringify": "^6.4.5"
+    },
+    "build": {
+        "appId": "com.bcan.app",
+        "productName": "BCAN Broadcast Control",
+        "directories": {
+            "output": "dist"
+        },
+        "win": {
+            "target": ["portable", "zip"],
+            "icon": "BCAN.ico"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true
+        }
+    }
+}
