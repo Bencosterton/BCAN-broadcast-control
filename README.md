@@ -13,11 +13,11 @@ BCAN Broadcast Control Client application also features a simple text edit inter
 
 ## Design Topology
 
-BCAN is designed to be scalable, resilient to interruption and change. To do this BCAN runs in a mesh topology, allowing client and control nodes to be added, removed, crash, rebuilt, without disrupting the control ecosystem as a whole. <br>
-There is no downtime for client or control node upgrades. Ever. <br>
+BCAN is designed to be scalable, resilient to interruption and change. To do this BCAN runs in a mesh topology, allowing client and control modules to be added, removed, crash, rebuilt, without disrupting the control ecosystem as a whole. <br>
+There is no downtime for client or control Module upgrades. Ever. <br>
 There is no expense to business if the client requirement, or control system grows.<br>
 
-![image](https://github.com/user-attachments/assets/a9476456-70a5-49d2-8978-6589e8867ae0)
+![image](https://github.com/user-attachments/assets/c1ed8bb3-d527-47d0-873a-0cca0803abec)
 
 
 ## Demo
