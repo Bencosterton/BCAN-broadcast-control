@@ -41,5 +41,5 @@ npm start
 
 <p>The beauty of BCAN Broadcast Control is the simplicity. So out the box, the client won't do much, if anything.<br>
 You will need to use the 'config' tab to add you own web interfaces.<br>
-If you're lucky enough to have an Imagine IP3 on site, we have an interface for you already, see above<br>
+If you're lucky enough to have an Imagine IP3 on site, I have an interface for you already, see above<br>
 For anything else, build it! Or get in touch.</p>
