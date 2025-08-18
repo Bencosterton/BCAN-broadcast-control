@@ -22,7 +22,7 @@ There is no expense to business if the client requirement, or control system gro
 
 ## Demo
 <p>To demo BCAN, I have connected various control modules to the client interface;<br>
-Imagine IP3 video router control - https://github.com/Bencosterton/Imagine_IP3_Control<br>
+Harris LRC routers - https://github.com/Bencosterton/harris_lrc<br>
 Lawo MC2 router control - https://github.com/Bencosterton/Lawo_Emberplus<br>
 TSL-UMD management - https://github.com/Bencosterton/TSL-UMDv5_scripts<br>
 Grass Valley Camera Control - https://github.com/Bencosterton/Grass-Valley-LDX<br>
